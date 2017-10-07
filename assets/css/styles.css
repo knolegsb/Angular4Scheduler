@@ -1,0 +1,49 @@
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    background-color: whitesmoke;
+}
+
+.hero-spacer {
+    margin-top: 50px;
+}
+
+.hero-feature {
+    margin-bottom: 30px;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.img-avatar {
+    height: 150px;
+    width: 150px;
+}
+
+.adjust1 {
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.adjust2 {
+    margin: 0;
+}
+
+.carousel-indicators li {
+    border: 1px solid #ccc;
+}
+
+.carousel-control {
+    color: #31708f;
+}
+
+.carousel-control:hover,
+.carousel-control:focus {
+    color: #31708f;
+}
+
+.carousel-control.left,
+.carousel-control.right {
+    background-image: none;
+}
