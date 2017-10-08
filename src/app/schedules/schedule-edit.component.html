@@ -1,0 +1,37 @@
+<h1>Edit Schedule</h1>
+
+<form #editScheduleForm="ngForm" novalidate>
+    <div class="alert alert-danger" [hidden]="editScheduleForm.form.valid">
+        <ul *ngIf="creator.dirty && !creator.valid">
+            <li>Creator name is required <i>(5-50 characters)</i></li>
+        </ul>
+    </div>
+
+    <button type="button" class="btn btn-danger" (click)="back()">
+        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back
+    </button>
+    <button type="button" [disabled]="!editScheduleForm.form.valid" class="btn btn-default" (click)="updateSchedule(editScheduleForm)">
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+    </button>
+
+    <hr />
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+                <label class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Creator</label>
+                <input type="text" class='form-control' [(ngModel)]="schedule.creator" name="creator" #creator="ngModel" required pattern=".{5, 50}" disabled />
+            </div>
+
+            <div class="col-md-4">
+                <label class="control-label"><i class="fa fa-text-width" aria-hidden="true"></i> True</label>
+                <input type="text" class='form-control' [(ngModel)]="schedule.title" name="title" #creator="ngModel" required pattern=".{5, 50}" />
+            </div>
+            
+            <div class="col-md-4">
+                <label class="control-label"><i class="fa fa-paragraph" aria-hidden="true"></i> Description</label>
+                <input type="text" class='form-control' [(ngModel)]="schedule.description" name="description" #creator="ngModel" required pattern=".{10,}" />
+            </div>
+        </div>
+    </div>
+</form>

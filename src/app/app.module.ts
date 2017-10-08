@@ -20,6 +20,18 @@ import { ScheduleListComponent } from './schedules/schedule-list.component';
 import { ScheduleEditComponent } from './schedules/schedule-edit.component';
 import { UserListComponent } from "./users/user-list.component";
 import { UserCardComponent } from "./users/user-card.component";
+import { DateFormatPipe } from './shared/pipes/date-format.pipe';
+import { HighlightDirective } from './shared/directives/highlight.directive';
+import { MobileHideDirective } from './shared/directives/mobile-hide.directive';
+
+import { DataService } from './shared/services/data.service';
+import { ConfigService } from './shared/utils/config.service';
+import { ItemsService } from './shared/utils/items.service';
+import { MappingService } from './shared/utils/mapping.service';
+import { NotificationService } from './shared/utils/notification.service';
+import { UrlSerializer } from '@angular/router';
+import { LowerCaseUrlSerializer } from './shared/utils/lower-case-url-serializer';
+
 
 @NgModule({
     imports: [
@@ -27,7 +39,12 @@ import { UserCardComponent } from "./users/user-card.component";
         BrowserAnimationsModule,
         FormsModule,
         HttpModule,
-        routing
+        routing,
+        DatepickerModule.forRoot(),
+        ModalModule.forRoot(),
+        ProgressbarModule.forRoot(),
+        PaginationModule.forRoot(),
+        TimepickerModule.forRoot()
     ],
     declarations: [
         AppComponent,
@@ -35,9 +52,24 @@ import { UserCardComponent } from "./users/user-card.component";
         ScheduleListComponent,
         ScheduleEditComponent,
         UserListComponent,
-        UserCardComponent
+        UserCardComponent,
+        HighlightDirective,
+        MobileHideDirective,
+        DateFormatPipe,
+        SlimLoadingBarComponent
     ],
-    providers: [],
+    providers: [
+        ConfigService,
+        DataService,
+        ItemsService,
+        MappingService,
+        NotificationService,
+        SlimLoadingBarService,
+        {
+            provide: UrlSerializer,
+            useClass: LowerCaseUrlSerializer
+        }
+    ],
     bootstrap: [AppComponent]
 })
 

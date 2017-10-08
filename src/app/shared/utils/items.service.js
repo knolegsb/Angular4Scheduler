@@ -10,9 +10,54 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var _ = require("lodash");
 var ItemsService = (function () {
     function ItemsService() {
     }
+    /*
+    Removes an item from an array using the lodash library
+    */
+    ItemsService.prototype.removeItemFromArray = function (array, item) {
+        _.remove(array, function (current) {
+            // console.log(current);
+            return JSON.stringify(current) === JSON.stringify(item);
+        });
+    };
+    ItemsService.prototype.removeItems = function (array, predicate) {
+        _.remove(array, predicate);
+    };
+    /*
+    Finds a specific item in an array using a predicate and respaces it
+    */
+    ItemsService.prototype.setItem = function (array, predicate, item) {
+        var _oldItem = _.find(array, predicate);
+        if (_oldItem) {
+            var index = _.indexOf(array, _oldItem);
+            array.splice(index, 1, item);
+        }
+        else {
+            array.push(item);
+        }
+    };
+    /*
+    Adds an item to zero index
+    */
+    ItemsService.prototype.addItemToStart = function (array, item) {
+        array.splice(0, 0, item);
+    };
+    /*
+    From an array of type T, select all values of type R for property
+    */
+    ItemsService.prototype.getPropertyValues = function (array, property) {
+        var result = _.map(array, property);
+        return result;
+    };
+    /*
+    Util method to serialize a string to a specific Type
+    */
+    ItemsService.prototype.getSerialized = function (arg) {
+        return JSON.parse(JSON.stringify(arg));
+    };
     return ItemsService;
 }());
 ItemsService = __decorate([

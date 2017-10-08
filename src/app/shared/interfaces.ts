@@ -19,7 +19,7 @@ export interface ISchedule {
     dateUpdated: Date;
     creator: string;
     creatorId: number;
-    attendess: number[];
+    attendees: number[];
 }
 
 export interface IScheduleDetails {
@@ -28,7 +28,7 @@ export interface IScheduleDetails {
     description: string;
     timeStart: Date;
     timeEnd: Date;
-    locatioin: string;
+    location: string;
     type: string;
     status: string;
     dateCreated: Date;
