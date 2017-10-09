@@ -1,10 +1,10 @@
 <h1>USERS</h1>
 
-<button class="btn btn-primary">
+<button class="btn btn-primary" [class.hidden]="addingUser" (click)="addUser()">
     <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
     Add
 </button>
-<button class="btn btn-danger">
+<button class="btn btn-danger" [class.hidden]="!addingUser" (click)="cancelAddUser()">
     <i class="fa fa-ban fa-2x" aria-hidden="true"></i>
     Cancel
 </button>
@@ -12,7 +12,7 @@
 <hr />
 
 <div class="row text-danger">
-    <div class="col-md-3 col-sm-6 hero-feature">
-        <user-card></user-card>
+    <div class="col-md-3 col-sm-6 hero-feature" *ngFor="let user of users">
+        <user-card [user]="user" (removeUser)="removeUser($event);" (userCreated)="userCreated($event);"></user-card>
     </div>
 </div>

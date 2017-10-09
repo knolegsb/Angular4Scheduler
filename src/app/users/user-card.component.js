@@ -10,18 +10,166 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var data_service_1 = require("../shared/services/data.service");
+var items_service_1 = require("../shared/utils/items.service");
+var notification_service_1 = require("../shared/utils/notification.service");
+var config_service_1 = require("../shared/utils/config.service");
+var ngx_bootstrap_1 = require("ngx-bootstrap");
 var UserCardComponent = (function () {
-    function UserCardComponent() {
+    function UserCardComponent(itemsService, notificationService, dataService, configService) {
+        this.itemsService = itemsService;
+        this.notificationService = notificationService;
+        this.dataService = dataService;
+        this.configService = configService;
+        this.removeUser = new core_1.EventEmitter();
+        this.userCreated = new core_1.EventEmitter();
+        this.onEdit = false;
+        this.items = ['item1', 'item2', 'item3'];
+        this.userSchedulesLoaded = false;
+        this.index = 0;
+        this.backdropOptions = [true, false, 'static'];
+        this.animation = true;
+        this.keyboard = true;
+        this.backdrop = true;
     }
+    UserCardComponent.prototype.ngOnInit = function () {
+        this.onEdit = !this.onEdit;
+        this.editedUser = this.itemsService.getSerialized(this.user);
+        // <IUser>JSON.parse(JSON.stringify(this.user)); // todo Utils;
+    };
+    UserCardComponent.prototype.CreateUser = function () {
+        var _this = this;
+        // this.slimLoader.start();
+        this.dataService.createUser(this.editedUser)
+            .subscribe(function (userCreated) {
+            _this.user = _this.itemsService.getSerialized(userCreated);
+            _this.editedUser = _this.itemsService.getSerialized(_this.user);
+            _this.onEdit = false;
+            _this.userCreated.emit({ value: userCreated });
+            // this.slimLoader.complete();
+        }, function (error) {
+            _this.notificationService.printErrorMessage('Failed to created user');
+            _this.notificationService.printErrorMessage(error);
+            // this.slimLoader.complete();
+        });
+    };
+    UserCardComponent.prototype.updateUser = function () {
+        var _this = this;
+        // this.slimLoader.start();
+        this.dataService.updateUser(this.editedUser)
+            .subscribe(function () {
+            _this.user = _this.editedUser;
+            _this.onEdit = !_this.onEdit;
+            _this.notificationService.printSuccessMessage(_this.user.name + ' has been upudated');
+            // this.slimLoader.complete();                
+        }, function (error) {
+            _this.notificationService.printErrorMessage('Failed to edit user');
+            _this.notificationService.printErrorMessage(error);
+            // this.slimLoader.complete();
+        });
+    };
+    UserCardComponent.prototype.openRemoveModal = function () {
+        var _this = this;
+        this.notificationService.openConfirmationDialog('Are you sure you want to remove ' + this.user.name + '?', function () {
+            // this.slimLoader.start();
+            _this.dataService.deleteUser(_this.user.id)
+                .subscribe(function (res) {
+                _this.removeUser.emit({
+                    value: _this.user
+                });
+                //this.slimLoader.complete();
+            }, function (error) {
+                _this.notificationService.printErrorMessage(error);
+                // this.slimLoader.complete();
+            });
+        });
+    };
+    UserCardComponent.prototype.viewSchedules = function (user) {
+        var _this = this;
+        console.log(user);
+        this.dataService.getUserSchedules(this.editedUser.id)
+            .subscribe(function (schedules) {
+            _this.userSchedules = schedules;
+            console.log(_this.userSchedules);
+            _this.userSchedulesLoaded = true;
+            _this.childModal.show();
+            // this.slimLoader.complete();
+        }, function (error) {
+            // this.slimLoader.complete();
+            _this.notificationService.printErrorMessage('Failed to load users. ' + error);
+        });
+    };
+    UserCardComponent.prototype.hideChildModal = function () {
+        this.childModal.hide();
+    };
+    UserCardComponent.prototype.opened = function () {
+        var _this = this;
+        // this.slimLoader.start();
+        this.dataService.getUserSchedules(this.editedUser.id)
+            .subscribe(function (schedules) {
+            _this.userSchedules = schedules;
+            console.log(_this.userSchedules);
+            _this.userSchedulesLoaded = true;
+            //this.slimLoader.complete();
+        }, function (error) {
+            //this.slimLoader.complete();
+            _this.notificationService.printErrorMessage('Failed to load users. ' + error);
+        });
+        this.output = '(opened)';
+    };
+    UserCardComponent.prototype.isUserValid = function () {
+        return !(this.editedUser.name.trim() == "") && !(this.editedUser.profession.trim() === "");
+    };
     return UserCardComponent;
 }());
+__decorate([
+    core_1.ViewChild('childModel'),
+    __metadata("design:type", ngx_bootstrap_1.ModalDirective)
+], UserCardComponent.prototype, "childModal", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Object)
+], UserCardComponent.prototype, "user", void 0);
+__decorate([
+    core_1.Output(),
+    __metadata("design:type", Object)
+], UserCardComponent.prototype, "removeUser", void 0);
+__decorate([
+    core_1.Output(),
+    __metadata("design:type", Object)
+], UserCardComponent.prototype, "userCreated", void 0);
+__decorate([
+    core_1.ViewChild('modal'),
+    __metadata("design:type", Object)
+], UserCardComponent.prototype, "modal", void 0);
 UserCardComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
         selector: 'user-card',
-        templateUrl: 'user-card.component.html'
+        templateUrl: 'user-card.component.html',
+        animations: [
+            core_1.trigger('flyInOut', [
+                core_1.state('in', core_1.style({ opacity: 1, transform: 'translateX(0)' })),
+                core_1.transition('void => *', [
+                    core_1.style({
+                        opacity: 0,
+                        transform: 'translateX(-100%)'
+                    }),
+                    core_1.animate('0.5x ease-in')
+                ]),
+                core_1.transition('* => void', [
+                    core_1.animate('0.2s 10 ease-out', core_1.style({
+                        opacity: 0,
+                        transform: 'translateX(100X(100%)'
+                    }))
+                ])
+            ])
+        ]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [items_service_1.ItemsService,
+        notification_service_1.NotificationService,
+        data_service_1.DataService,
+        config_service_1.ConfigService])
 ], UserCardComponent);
 exports.UserCardComponent = UserCardComponent;
 //# sourceMappingURL=user-card.component.js.map

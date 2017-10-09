@@ -1,48 +1,48 @@
 <h1>User Card</h1>
 
-<div class="panel panel-primary">
+<div class="panel panel-primary" [ngClass]="{shadowCard: onEdit}" [@flyInOut]="'in'">
     <div class="panel-heading">
-        <h3 class="panel-title pull-left"><i class="fa fa-user" aria-hidden="true"></i> Edit User Name</h3>
-        <input class="form-control" />
+        <h3 class="panel-title pull-left" [class.hidden]="onEdit"><i class="fa fa-user" aria-hidden="true"></i> {{editedUser}}</h3>
+        <input class="form-control" [(ngModel)]="editedUser.name" [class.hidden]="!onEdit" [style.color]="'brown'" required />
         <div class="clearfix"></div>
     </div>
 
     <div highllight="whitesmoke" class="panel-body">
         <div class="">
-            <img class="img-avatar" alt="">
+            <img class="img-avatar" src="{{apiHost}}images/{{editedUser.avatar}}" alt="">
             <div class="caption">
                 <p>
-                    <span>profession</span>
+                    <span [class.hidden]="onEdit">{{editedUser.profession}}</span>
+                </p>
+                <p [hidden]="!onEdit">
+                    <input [(ngModel)]="editedUser.profession" class="form-control" required />
                 </p>
                 <p>
-                    <input class="form-control" required />
-                </p>
-                <p>
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" (click)="viewSchedules(editedUser)" [disabled]="editedUser.schedulesCreated === 0">
                         <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Schedules 
-                        <span class="badge"> Schedules Created</span>
+                        <span class="badge"> {{editedUser.schedulesCreated}}</span>
                     </button>
                 </p>
             </div>
         </div>
     </div>
     <div class="panel-footer">
-        <div>
-            <button class="btn btn-default btn-xs">
+        <div [class.hidden]="editedUser.id < 0">
+            <button class="btn btn-default btn-xs" (click)="eidtedUser()">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
-                Schedules
+                {{onEdit === false ? "Edit" : "Cancel" }}
             </button>
-            <button class="btn btn-default btn-xs">
+            <button class="btn btn-default btn-xs" [class.hidden]="!onEdit" (click)="updateUser()" [disabled]="!isUserValid()">
                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 
                 Update
             </button>
-            <button class="btn btn-danger btn-xs">
+            <button class="btn btn-danger btn-xs" (click)="openRemoveModal()">
                 <i class="fa fa-times" aria-hidden="true"></i>
                 Remove
             </button>
         </div>
-        <div>
-            <button class="btn btn-default btn-xs">
+        <div [class.hidden]="!(editedUser.id < 0)">
+            <button class="btn btn-default btn-xs" [class.hidden]="!onEdit" (click)="createUser()" [disabled]="!isUserValid">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 Create
             </button>
@@ -50,14 +50,14 @@
     </div>
 </div>
 
-<div>
-    <div class="modal-dialog modal-lg">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" *ngIf="userScheduleLoaded">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" aria-label="Close">
+                <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title"> User schedules created</h4>
+                <h4 class="modal-title"> {{editedUser.name}} schedules created</h4>
             </div>
             <div class="modal-body">
                 <table class="table table-hover">
@@ -71,12 +71,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>title</td>
-                            <td>description</td>
-                            <td>location</td>
-                            <td>time start</td>
-                            <td>time start</td>
+                        <tr *ngFor="let schedule of userSchedules">
+                            <td>{{schedule.title}}</td>
+                            <td>{{schedule.description}}</td>
+                            <td>{{schedule.location}}</td>
+                            <td>{{schedule.timeStart | dateFormat | date: 'medium'}}</td>
+                            <td>{{schedule.tiemEnd | dateFormat | date: 'medium'}}</td>
                         </tr>
                     </tbody>
                 </table>
