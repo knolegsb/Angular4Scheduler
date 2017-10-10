@@ -48,6 +48,7 @@ export class UserCardComponent implements OnInit {
     editedUser: IUser;
     onEdit: boolean = false;
     apiHost: string;
+
     //Modal properties
     @ViewChild('modal')
     modal; any;
@@ -72,6 +73,7 @@ export class UserCardComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.apiHost = this.configService.getApiHost();
         this.onEdit = !this.onEdit;
         this.editedUser = this.itemsService.getSerialized<IUser>(this.user);
         // <IUser>JSON.parse(JSON.stringify(this.user)); // todo Utils;

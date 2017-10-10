@@ -33,6 +33,7 @@ var UserCardComponent = (function () {
         this.backdrop = true;
     }
     UserCardComponent.prototype.ngOnInit = function () {
+        this.apiHost = this.configService.getApiHost();
         this.onEdit = !this.onEdit;
         this.editedUser = this.itemsService.getSerialized(this.user);
         // <IUser>JSON.parse(JSON.stringify(this.user)); // todo Utils;
