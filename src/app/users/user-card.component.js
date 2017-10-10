@@ -156,12 +156,12 @@ UserCardComponent = __decorate([
                         opacity: 0,
                         transform: 'translateX(-100%)'
                     }),
-                    core_1.animate('0.5x ease-in')
+                    core_1.animate('0.5s ease-in')
                 ]),
                 core_1.transition('* => void', [
                     core_1.animate('0.2s 10 ease-out', core_1.style({
                         opacity: 0,
-                        transform: 'translateX(100X(100%)'
+                        transform: 'translateX(100%)'
                     }))
                 ])
             ])

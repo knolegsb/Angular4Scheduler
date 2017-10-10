@@ -26,12 +26,12 @@ import { ModalDirective } from 'ngx-bootstrap';
                     opacity: 0,
                     transform: 'translateX(-100%)'
                 }),
-                animate('0.5x ease-in')
+                animate('0.5s ease-in')
             ]),
             transition('* => void', [
                 animate('0.2s 10 ease-out', style({
                     opacity: 0,
-                    transform: 'translateX(100X(100%)'
+                    transform: 'translateX(100%)'
                 }))
             ])
         ])
